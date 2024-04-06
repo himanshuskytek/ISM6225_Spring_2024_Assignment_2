@@ -1,12 +1,10 @@
 ﻿/* 
- Rachana
+ISM6255 Spring 2024 Assignment 2
 YOU ARE NOT ALLOWED TO MODIFY ANY FUNCTION DEFINIDTION's PROVIDED.
 WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 
 
 */
-
- // Add this line to include Console, Array, Math, Exception, etc.
 using System.Text;
 namespace ISM6225_Spring_2024_Assignment_2
 {
@@ -97,23 +95,29 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static int RemoveDuplicates(int[] nums)
         {
-            // Edge case: if the array is empty, return 0
-            if (nums.Length == 0) return 0;
-
-            int k = 1; // Start with 1 since the first element is always unique
-            for (int i = 1; i < nums.Length; i++)
+            try
             {
-                if (nums[i] != nums[i - 1])
-                {
-                    // If the current element is not equal to the previous one,
-                    // it's a unique element, so we move it to the front part of the array.
-                    nums[k] = nums[i];
-                    k++; // Increment the count of unique elements
-                }
-            }
-            return k; // Return the number of unique elements
-        }
+                // Return 0 if the array is empty
+                if (nums.Length == 0) return 0;
 
+                int i = 0; // Pointer to insert unique element
+                for (int j = 1; j < nums.Length; j++)
+                {
+                    // Compare current element with the last unique element
+                    if (nums[j] != nums[i])
+                    {
+                        i++;  // Move to the next position
+                        nums[i] = nums[j];  // Update the new unique element here
+                    }
+                }
+                // Return the count of unique elements
+                return i + 1;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
 
 
         /*
@@ -140,23 +144,29 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static IList<int> MoveZeroes(int[] nums)
         {
-            int lastNonZeroFoundAt = 0; // Index of the last non-zero element
-                                        // Move all the non-zero elements to the beginning of the array
-            for (int i = 0; i < nums.Length; i++)
+            try
             {
-                if (nums[i] != 0)
+                int index = 0; // Pointer for positioning non-zero elements
+                for (int i = 0; i < nums.Length; i++)
                 {
-                    nums[lastNonZeroFoundAt++] = nums[i];
+                    // If element is non-zero, assign it to the current index and increment index
+                    if (nums[i] != 0)
+                    {
+                        nums[index++] = nums[i];
+                    }
                 }
+                // Populate remaining positions in the array with zeros
+                for (int i = index; i < nums.Length; i++)
+                {
+                    nums[i] = 0;
+                }
+                return nums;
             }
-            // Fill the remaining array with 0's
-            for (int i = lastNonZeroFoundAt; i < nums.Length; i++)
+            catch (Exception)
             {
-                nums[i] = 0;
+                throw;
             }
-            return nums; // Return the modified array
         }
-
 
 
         /*
@@ -199,31 +209,46 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static IList<IList<int>> ThreeSum(int[] nums)
         {
-            Array.Sort(nums); // Sort the array to apply two-pointer technique
-            IList<IList<int>> result = new List<IList<int>>();
-
-            for (int i = 0; i < nums.Length - 2; i++)
+            try
             {
-                if (i == 0 || (i > 0 && nums[i] != nums[i - 1]))
+                // Sorting the array enables the use of a two-pointer method
+                Array.Sort(nums);
+                List<IList<int>> result = new List<IList<int>>();
+
+                for (int i = 0; i < nums.Length - 2; i++)
                 {
-                    int lo = i + 1, hi = nums.Length - 1, sum = 0 - nums[i];
-                    while (lo < hi)
+                    // Continue if the current element is the same as the previous one to prevent repeating triples
+                    if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+                    int left = i + 1, right = nums.Length - 1;
+                    while (left < right)
                     {
-                        if (nums[lo] + nums[hi] == sum)
+                        int sum = nums[i] + nums[left] + nums[right];
+                        if (sum == 0)
                         {
-                            result.Add(new List<int> { nums[i], nums[lo], nums[hi] });
-                            while (lo < hi && nums[lo] == nums[lo + 1]) lo++;
-                            while (lo < hi && nums[hi] == nums[hi - 1]) hi--;
-                            lo++; hi--;
+                            result.Add(new List<int> { nums[i], nums[left], nums[right] });
+                            while (left < right && nums[left] == nums[left + 1]) left++;  // Move past duplicate elements
+                            while (left < right && nums[right] == nums[right - 1]) right--;  // Avoid duplicate elements
+                            left++;
+                            right--;
                         }
-                        else if (nums[lo] + nums[hi] < sum) lo++;
-                        else hi--;
+                        else if (sum < 0)
+                        {
+                            left++;
+                        }
+                        else
+                        {
+                            right--;
+                        }
                     }
                 }
+                return result;
             }
-            return result;
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
 
 
         /*
@@ -250,19 +275,28 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static int FindMaxConsecutiveOnes(int[] nums)
         {
-            int maxCount = 0, count = 0;
-            foreach (int num in nums)
+            try
             {
-                if (num == 1)
+                int maxCount = 0, currentCount = 0;
+                foreach (int num in nums)
                 {
-                    count++; // Increase count for each consecutive 1
-                    maxCount = Math.Max(maxCount, count); // Update maxCount if current count is higher
+                    if (num == 1)
+                    {
+                        currentCount++;  // Increment the count
+                        maxCount = Math.Max(maxCount, currentCount);  // if current sequence is longer, Update maxCount 
+                    }
+                    else
+                    {
+                        currentCount = 0;  // when a zero is encountered, Reset the count 
+                    }
                 }
-                else count = 0; // Reset count if 0 is found
+                return maxCount;
             }
-            return maxCount;
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
 
 
         /*
@@ -290,20 +324,28 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static int BinaryToDecimal(int binary)
         {
-            int decimalValue = 0;
-            int baseValue = 1;
-
-            while (binary > 0)
+            try
             {
-                int lastDigit = binary % 10; // Get the last digit
-                binary = binary / 10; // Remove the last digit from binary
-                decimalValue += lastDigit * baseValue;
-                baseValue = baseValue * 2; // Increase the base value (power of 2)
+                // Set the initial decimal and base values
+                int decimalValue = 0, baseValue = 1;
+
+                while (binary > 0)
+                {
+                    // Get the rightmost binary digit
+                    int lastDigit = binary % 10;
+                    binary = binary / 10;  // Update the binary number by removing the rightmost digit
+
+                    // Update the decimal value using the current binary digit and base
+                    decimalValue += lastDigit * baseValue;
+                    baseValue = baseValue * 2;  // Progress to the next power of 2 for the base
+                }
+                return decimalValue;
             }
-
-            return decimalValue;
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
 
 
         /*
@@ -333,20 +375,29 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static int MaximumGap(int[] nums)
         {
-            if (nums.Length < 2) return 0; // If less than two elements, return 0
-
-            Array.Sort(nums); // Sort the array to find successive elements
-            int maxGap = 0;
-
-            for (int i = 1; i < nums.Length; i++)
+            try
             {
-                int gap = nums[i] - nums[i - 1]; // Calculate the gap between successive elements
-                if (gap > maxGap) maxGap = gap; // Update maxGap if current gap is larger
+                // If the array has fewer than two elements, return 0 since a gap cannot exist
+                if (nums.Length < 2) return 0;
+
+                // Sorting the array to ease the identification of the largest gap between consecutive elements
+                Array.Sort(nums);
+                int maxGap = 0;
+
+                // Loop through the sorted array to compute the largest difference between two successive elements
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    maxGap = Math.Max(maxGap, nums[i] - nums[i - 1]);
+                }
+
+                return maxGap;
             }
-
-            return maxGap;
+            catch (Exception)
+            {
+                // Propagate the exception if any occurs
+                throw;
+            }
         }
-
 
 
         /*
@@ -378,18 +429,31 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static int LargestPerimeter(int[] nums)
         {
-            Array.Sort(nums); // Sort the array to try the largest sides first
-            for (int i = nums.Length - 3; i >= 0; i--)
+            try
             {
-                // Check if the three sides can form a triangle
-                if (nums[i] + nums[i + 1] > nums[i + 2])
-                {
-                    return nums[i] + nums[i + 1] + nums[i + 2]; // Return the perimeter
-                }
-            }
-            return 0; // If no valid triangle found, return 0
-        }
+                // Sort the array to make it easier to check for valid triangle sides
+                Array.Sort(nums);
 
+                // Check from the largest elements to find a valid triangle
+                for (int i = nums.Length - 1; i >= 2; i--)
+                {
+                    // Check if the three sides can form a triangle (triangle inequality theorem)
+                    if (nums[i] < nums[i - 1] + nums[i - 2])
+                    {
+                        return nums[i] + nums[i - 1] + nums[i - 2];  // Return the perimeter of the triangle
+                    }
+                }
+
+                // Return 0 if no three sides form a valid triangle
+                return 0;
+            }
+            catch (Exception)
+            {
+
+                // Propagate any exceptions encountered
+                throw;
+            }
+        }
 
 
         /*
@@ -435,16 +499,21 @@ namespace ISM6225_Spring_2024_Assignment_2
 
         public static string RemoveOccurrences(string s, string part)
         {
-            // Keep removing the part from string s until it no longer exists
-            StringBuilder sb = new StringBuilder(s);
-            int index;
-            while ((index = sb.ToString().IndexOf(part)) != -1)
+            try
             {
-                sb.Remove(index, part.Length);
+                // Continue looping until all occurrences of part are removed from s
+                while (s.Contains(part))
+                {
+                    // Remove the first occurrence
+                    s = s.Replace(part, "");
+                }
+                return s;
             }
-            return sb.ToString();
+            catch (Exception)
+            {
+                throw;
+            }
         }
-
 
 
         /* Inbuilt Functions - Don't Change the below functions */
